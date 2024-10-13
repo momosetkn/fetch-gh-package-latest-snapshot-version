@@ -1,0 +1,30 @@
+{
+  "name": "fetch-gh-package-latest-snapshot-version",
+  "version": "0.0.0",
+  "type": "commonjs",
+  "scripts": {
+    "build": "esbuild src/index.ts --bundle --platform=node --target=node20 --outfile=dist/index.js --sourcemap"
+  },
+  "keywords": [
+    "github",
+    "actions"
+  ],
+  "author": "momosetkn",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@eslint/js": "^9.11.1",
+    "esbuild": "^0.24.0",
+    "eslint": "^9.11.1",
+    "globals": "^15.9.0",
+    "typescript": "^5.6.2",
+    "typescript-eslint": "^8.7.0"
+  },
+  "dependencies": {
+    "@actions/core": "^1.10.1",
+    "@types/node": "^22.7.2",
+    "node-fetch": "^3.3.2",
+    "source-map-support": "^0.5.21",
+    "ts-node": "^10.9.2"
+  },
+  "packageManager": "pnpm@9.11.0"
+}
