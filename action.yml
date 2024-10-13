@@ -9,6 +9,9 @@ inputs:
   packageName:
     description: "package name"
     required: true
+  ghToken:
+    description: "GitHub access token. specify `secrets.GITHUB_TOKEN`"
+    required: false
 outputs:
   latestSnapshotVersion:
     description: "latest snapshot version"
@@ -21,6 +24,6 @@ runs:
     - name: fetchSnapshotVersion
       id: fetch-snapshot-version
       run: |
-        latestSnapshotVersion=$(node fetchSnapshotVersion.js ${{ inputs.org }} ${{ inputs.packageType }} ${{ inputs.packageName }} ${{ secrets.GITHUB_TOKEN }})
+        latestSnapshotVersion=$(node fetchSnapshotVersion.js ${{ inputs.org }} ${{ inputs.packageType }} ${{ inputs.packageName }} ${{ inputs.ghToken }})
         echo "latestSnapshotVersion=$latestSnapshotVersion" >> $GITHUB_OUTPUT
       shell: bash
