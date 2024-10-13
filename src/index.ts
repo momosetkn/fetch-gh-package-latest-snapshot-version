@@ -23,12 +23,19 @@ function fetchGithubData() {
         }
     };
     fetch(url, options)
-        .then(x => x.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(x => {
+            console.log(JSON.stringify(x))
             const latest = x.data[0].name
             console.log(`version: ${latest}`)
             core.setOutput('version', latest);
-        }).catch(x => console.error(x))
+        })
+        .catch(error => console.error(error));
 }
 
 fetchGithubData();
