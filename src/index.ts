@@ -1,11 +1,12 @@
-import core = require('@actions/core');
-
-const org = core.getInput('org');
-const packageType = core.getInput('packageType');
-const packageName = core.getInput('packageName');
-const githubToken = core.getInput('githubToken');
+import { getInput, setOutput } from '@actions/core';
+import fetch from 'node-fetch';
 
 function fetchGithubData() {
+    const org = getInput('org');
+    const packageType = getInput('packageType');
+    const packageName = getInput('packageName');
+    const githubToken = getInput('githubToken');
+
     // https://docs.github.com/en/rest/packages/packages?apiVersion=2022-11-28#list-package-versions-for-a-package-owned-by-an-organization
     let authHeader = {}
     if (githubToken) {
@@ -15,26 +16,29 @@ function fetchGithubData() {
     }
     const url = `https://api.github.com/orgs/${org}/packages/${packageType}/${packageName}/versions`;
     const options = {
-        method: 'GET',
         headers: {
-            ...authHeader,
-            'Accept': 'application/vnd.github.v3+json'
+            'Authorization': `Bearer ${githubToken}`,
+            'Accept': 'application/vnd.github+json',
+            'X-GitHub-Api-Version': '2022-11-28'
         }
     };
     fetch(url, options)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+        .then(response =>
+            response.json().then(data =>
+                [response.ok, response.status, data])
+        )
+        .then(([ok, status, data]) => {
+            if (!ok) {
+                throw new Error(`HTTP error! status: ${status} body: ${JSON.stringify(data)}`);
             }
-            return response.json();
-        })
-        .then(x => {
-            console.log(JSON.stringify(x))
-            const latest = x.data[0].name
+            const latest = data[0].name
             console.log(`version: ${latest}`)
-            core.setOutput('version', latest);
+            setOutput('version', latest)
         })
-        .catch(error => console.error(error));
+        .catch(error => {
+            console.error(error);
+            process.exit(1);
+        });
 }
 
 fetchGithubData();
