@@ -17,7 +17,7 @@ function fetchGithubData() {
     const url = `https://api.github.com/orgs/${org}/packages/${packageType}/${packageName}/versions`;
     const options = {
         headers: {
-            'Authorization': `Bearer ${githubToken}`,
+            ...authHeader,
             'Accept': 'application/vnd.github+json',
             'X-GitHub-Api-Version': '2022-11-28'
         }

@@ -26161,16 +26161,9 @@ function fetchGithubData() {
     };
   }
   const url = `https://api.github.com/orgs/${org}/packages/${packageType}/${packageName}/versions`;
-  console.log("aaaaaaaaaaaaaaaaaaaaa");
-  console.log(org == "liquibase");
-  console.log(packageType == "maven");
-  console.log(`|${packageType}|`);
-  console.log(packageName == "org.liquibase.liquibase-core");
-  console.log(`|${packageName}|`);
-  console.log("aaaaaaaaaaaaaaaaaaaaa");
   const options = {
     headers: {
-      "Authorization": `Bearer ${githubToken}`,
+      ...authHeader,
       "Accept": "application/vnd.github+json",
       "X-GitHub-Api-Version": "2022-11-28"
     }
