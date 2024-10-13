@@ -13,17 +13,8 @@ inputs:
     description: "GitHub access token. specify `secrets.GITHUB_TOKEN`"
     required: false
 outputs:
-  latestSnapshotVersion:
+  version:
     description: "latest snapshot version"
-    value: ${{ steps.fetch-snapshot-version.outputs.idToken }}
 runs:
-  using: "composite"
-  steps:
-    - uses: actions/setup-node@v4
-
-    - name: fetchSnapshotVersion
-      id: fetch-snapshot-version
-      run: |
-        latestSnapshotVersion=$(node fetchSnapshotVersion.js ${{ inputs.org }} ${{ inputs.packageType }} ${{ inputs.packageName }} ${{ inputs.ghToken }})
-        echo "latestSnapshotVersion=$latestSnapshotVersion" >> $GITHUB_OUTPUT
-      shell: bash
+  using: "node20"
+  main: "index.js"
