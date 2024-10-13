@@ -1,0 +1,26 @@
+name: "Fetch github-package latest snapshot version"
+inputs:
+  org:
+    description: "github Organization"
+    required: true
+  packageType:
+    description: "package manager name"
+    required: true
+  packageName:
+    description: "package name"
+    required: true
+outputs:
+  latestSnapshotVersion:
+    description: "latest snapshot version"
+    value: ${{ steps.fetch-snapshot-version.outputs.idToken }}
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/setup-node@v4
+
+    - name: fetchSnapshotVersion
+      id: fetch-snapshot-version
+      run: |
+        latestSnapshotVersion=$(node fetchSnapshotVersion.js ${{ inputs.org }} ${{ inputs.packageType }} ${{ inputs.packageName }} ${{ secrets.GITHUB_TOKEN }})
+        echo "latestSnapshotVersion=$latestSnapshotVersion" >> $GITHUB_OUTPUT
+      shell: bash
