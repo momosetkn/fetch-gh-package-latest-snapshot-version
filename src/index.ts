@@ -25,9 +25,9 @@ function fetchGithubData() {
     fetch(url, options)
         .then(x => x.json())
         .then(x => {
-            const latest = x[0].name
+            const latest = x.data[0].name
             core.setOutput('version', latest);
-        })
+        }).catch(x => console.error(x))
 }
 
 fetchGithubData();
