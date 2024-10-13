@@ -19805,6 +19805,7 @@ function fetchGithubData() {
   };
   fetch(url, options).then((x) => x.json()).then((x) => {
     const latest = x.data[0].name;
+    console.log(`version: ${latest}`);
     core.setOutput("version", latest);
   }).catch((x) => console.error(x));
 }
