@@ -19799,7 +19799,6 @@ function fetchGithubData() {
     method: "GET",
     headers: {
       ...authHeader,
-      "User-Agent": "node.js",
       "Accept": "application/vnd.github.v3+json"
     }
   };
