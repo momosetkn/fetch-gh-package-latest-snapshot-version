@@ -1,4 +1,3 @@
-import https = require('https');
 import core = require('@actions/core');
 
 const org = core.getInput('org');
@@ -14,7 +13,7 @@ function fetchGithubData() {
             'Authorization': `Bearer ${githubToken}`,
         }
     }
-    const url = `https://api.github.com//orgs/${org}/packages/${packageType}/${packageName}/versions`;
+    const url = `https://api.github.com/orgs/${org}/packages/${packageType}/${packageName}/versions`;
     const options = {
         method: 'GET',
         headers: {

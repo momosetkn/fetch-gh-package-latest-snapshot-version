@@ -275,7 +275,7 @@ var require_tunnel = __commonJS({
     var net = require("net");
     var tls = require("tls");
     var http = require("http");
-    var https2 = require("https");
+    var https = require("https");
     var events = require("events");
     var assert = require("assert");
     var util = require("util");
@@ -297,12 +297,12 @@ var require_tunnel = __commonJS({
     }
     function httpOverHttps(options) {
       var agent = new TunnelingAgent(options);
-      agent.request = https2.request;
+      agent.request = https.request;
       return agent;
     }
     function httpsOverHttps(options) {
       var agent = new TunnelingAgent(options);
-      agent.request = https2.request;
+      agent.request = https.request;
       agent.createSocket = createSecureSocket;
       agent.defaultPort = 443;
       return agent;
@@ -17318,7 +17318,7 @@ var require_lib = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.HttpClient = exports2.isHttps = exports2.HttpClientResponse = exports2.HttpClientError = exports2.getProxyUrl = exports2.MediaTypes = exports2.Headers = exports2.HttpCodes = void 0;
     var http = __importStar(require("http"));
-    var https2 = __importStar(require("https"));
+    var https = __importStar(require("https"));
     var pm = __importStar(require_proxy());
     var tunnel = __importStar(require_tunnel2());
     var undici_1 = require_undici();
@@ -17709,7 +17709,7 @@ var require_lib = __commonJS({
         const info = {};
         info.parsedUrl = requestUrl;
         const usingSsl = info.parsedUrl.protocol === "https:";
-        info.httpModule = usingSsl ? https2 : http;
+        info.httpModule = usingSsl ? https : http;
         const defaultPort = usingSsl ? 443 : 80;
         info.options = {};
         info.options.host = info.parsedUrl.hostname;
@@ -17779,7 +17779,7 @@ var require_lib = __commonJS({
         }
         if (!agent) {
           const options = { keepAlive: this._keepAlive, maxSockets };
-          agent = usingSsl ? new https2.Agent(options) : new http.Agent(options);
+          agent = usingSsl ? new https.Agent(options) : new http.Agent(options);
           this._agent = agent;
         }
         if (usingSsl && this._ignoreSslError) {
@@ -19782,7 +19782,6 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
 });
 
 // src/index.ts
-var https = require("https");
 var core = require_core();
 var org = core.getInput("org");
 var packageType = core.getInput("packageType");
@@ -19795,7 +19794,7 @@ function fetchGithubData() {
       "Authorization": `Bearer ${githubToken}`
     };
   }
-  const url = `https://api.github.com//orgs/${org}/packages/${packageType}/${packageName}/versions`;
+  const url = `https://api.github.com/orgs/${org}/packages/${packageType}/${packageName}/versions`;
   const options = {
     method: "GET",
     headers: {
