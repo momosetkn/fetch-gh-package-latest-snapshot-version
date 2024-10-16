@@ -10,7 +10,6 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v4
 
@@ -39,3 +38,22 @@ jobs:
         git push --force origin develop:main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  test:
+    runs-on: ubuntu-latest
+    needs: release
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch latest SNAPSHOT version from GitHub Packages
+        id: liquibase-core-latest-snapshot-version
+        uses: momosetkn/fetch-gh-package-latest-snapshot-version@main
+        with:
+          org: liquibase
+          packageType: maven
+          packageName: org.liquibase.liquibase-core
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Print version
+        run: |
+          echo "version: ${{ steps.liquibase-core-latest-snapshot-version.outputs.version }}"
