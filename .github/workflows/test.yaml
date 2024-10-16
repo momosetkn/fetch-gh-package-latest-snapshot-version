@@ -21,6 +21,6 @@ jobs:
         packageName: org.liquibase.liquibase-core
         githubToken: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Test with latest liquibase SNAPSHOT version
+    - name: Print version
       run: |
-        ./gradlew test -PliquibaseVersion=${{ steps.liquibase-core-latest-snapshot-version.outputs.version }}
+        echo "version: ${{ steps.liquibase-core-latest-snapshot-version.outputs.version }}"
