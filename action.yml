@@ -17,4 +17,4 @@ outputs:
     description: "latest snapshot version"
 runs:
   using: "node20"
-  main: "dist/index.js"
+  main: "artifact/index.js"

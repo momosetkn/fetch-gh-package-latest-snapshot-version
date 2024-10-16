@@ -1,0 +1,38 @@
+name: release
+
+on:
+  push:
+    branches: [develop]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version-file: '.nvmrc'
+        cache: pnpm
+
+    - run: corepack enable
+
+    - name: Install dependencies
+      run: pnpm install
+
+    - name: Build the project
+      run: pnpm build
+
+    - name: Commit & push for replace artifact
+      run: |
+        mv dist artifact
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "actions@github.com"
+        git switch main
+        git add .
+        git commit -m "build (Automated update)"
+        git push origin main
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
