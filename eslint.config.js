@@ -14,7 +14,6 @@ export default tseslint.config(
       ecmaVersion: 2020,
       globals: globals.es2025,
       parserOptions: {
-        // languageOptions の子として追加
         project: ['./tsconfig.json'],
       },
     },
