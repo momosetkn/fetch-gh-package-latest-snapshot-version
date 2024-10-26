@@ -45,9 +45,7 @@ async function getLatestVersion({
         )
       }
       if (versionRegex) {
-        return data
-          .map((x) => x.name)
-          .find((name) => name && versionRegex.test(name))
+        return data.map((x) => x.name).find((name) => versionRegex.test(name))
       } else {
         return data[0].name
       }
