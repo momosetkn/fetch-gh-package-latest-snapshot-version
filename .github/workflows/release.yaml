@@ -58,7 +58,7 @@ jobs:
           echo "version: ${{ steps.liquibase-core-latest-snapshot-version.outputs.version }}"
 
       - name: Fetch latest master-version from GitHub Packages
-        id: liquibase-core-latest-snapshot-version
+        id: liquibase-core-master-version
         uses: momosetkn/fetch-gh-package-latest-snapshot-version@main
         with:
           org: liquibase
@@ -68,4 +68,4 @@ jobs:
           versionPattern: '^.{7}-SNAPSHOT$'
       - name: Print master-version
         run: |
-          echo "version: ${{ steps.liquibase-core-latest-snapshot-version.outputs.version }}"
+          echo "version: ${{ steps.liquibase-core-master-version.outputs.version }}"
