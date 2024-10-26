@@ -3,15 +3,17 @@ import fetch from 'node-fetch'
 
 async function getLatestVersion({
   githubToken,
+  versionPattern,
   org,
   packageType,
   packageName,
 }: {
-  githubToken: string
+  githubToken: string | undefined
+  versionPattern: string | undefined
   org: string
   packageType: string
   packageName: string
-}): Promise<string> {
+}): Promise<string | undefined> {
   // https://docs.github.com/en/rest/packages/packages?apiVersion=2022-11-28#list-package-versions-for-a-package-owned-by-an-organization
   let authHeader = {}
   if (githubToken) {
@@ -27,6 +29,7 @@ async function getLatestVersion({
       'X-GitHub-Api-Version': '2022-11-28',
     },
   }
+  const versionRegex = versionPattern && new RegExp(versionPattern)
   return fetch(url, options)
     .then((response) =>
       response.json().then((data) => ({
@@ -41,7 +44,11 @@ async function getLatestVersion({
           `HTTP error! status: ${status} body: ${JSON.stringify(data)}`,
         )
       }
-      return data[0].name
+      if (versionRegex) {
+        return data.map((x) => x.name).find(versionRegex.test)
+      } else {
+        return data[0].name
+      }
     })
 }
 
@@ -50,11 +57,13 @@ function fetchGithubData() {
   const packageType = getInput('packageType')
   const packageName = getInput('packageName')
   const githubToken = getInput('githubToken')
+  const versionPattern = getInput('versionPattern')
   const version = getLatestVersion({
     githubToken,
     org,
     packageType,
     packageName,
+    versionPattern,
   })
   version
     .then((v) => {

@@ -12,6 +12,9 @@ inputs:
   githubToken:
     description: 'GitHub access token. specify `secrets.GITHUB_TOKEN`'
     required: false
+  versionPattern:
+    description: 'regex pattern of version'
+    required: false
 outputs:
   version:
     description: 'latest snapshot version'

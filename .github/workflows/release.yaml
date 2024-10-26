@@ -45,7 +45,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Fetch latest SNAPSHOT version from GitHub Packages
+      - name: Fetch latest SNAPSHOT-version from GitHub Packages
         id: liquibase-core-latest-snapshot-version
         uses: momosetkn/fetch-gh-package-latest-snapshot-version@main
         with:
@@ -53,7 +53,19 @@ jobs:
           packageType: maven
           packageName: org.liquibase.liquibase-core
           githubToken: ${{ secrets.GITHUB_TOKEN }}
+      - name: Print SNAPSHOT-version
+        run: |
+          echo "version: ${{ steps.liquibase-core-latest-snapshot-version.outputs.version }}"
 
-      - name: Print version
+      - name: Fetch latest master-version from GitHub Packages
+        id: liquibase-core-latest-snapshot-version
+        uses: momosetkn/fetch-gh-package-latest-snapshot-version@main
+        with:
+          org: liquibase
+          packageType: maven
+          packageName: org.liquibase.liquibase-core
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          versionPattern: '^.{7}-SNAPSHOT$'
+      - name: Print master-version
         run: |
           echo "version: ${{ steps.liquibase-core-latest-snapshot-version.outputs.version }}"
