@@ -30,7 +30,8 @@ async function getLatestVersion({
   return fetch(url, options)
     .then((response) =>
       response.json().then((data) => ({
-        ...response,
+        ok: response.ok,
+        status: response.status,
         data: data as { name: string }[],
       })),
     )
