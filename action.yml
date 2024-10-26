@@ -1,20 +1,20 @@
-name: "Fetch github-package latest snapshot version"
+name: 'Fetch github-package latest snapshot version'
 inputs:
   org:
-    description: "github Organization"
+    description: 'github Organization'
     required: true
   packageType:
-    description: "package manager name"
+    description: 'package manager name'
     required: true
   packageName:
-    description: "package name"
+    description: 'package name'
     required: true
   githubToken:
-    description: "GitHub access token. specify `secrets.GITHUB_TOKEN`"
+    description: 'GitHub access token. specify `secrets.GITHUB_TOKEN`'
     required: false
 outputs:
   version:
-    description: "latest snapshot version"
+    description: 'latest snapshot version'
 runs:
-  using: "node20"
-  main: "artifact/index.js"
+  using: 'node20'
+  main: 'artifact/index.js'
