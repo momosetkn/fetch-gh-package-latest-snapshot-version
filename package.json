@@ -4,7 +4,8 @@
 	"type": "commonjs",
 	"scripts": {
 		"build": "esbuild src/index.ts --bundle --platform=node --target=node20 --outfile=dist/index.js --sourcemap",
-		"check": "biome check --write"
+		"check": "biome check --write",
+		"checkTs": "tsc -noEmit"
 	},
 	"keywords": ["github", "actions"],
 	"author": "momosetkn",

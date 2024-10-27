@@ -24,6 +24,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: checkTs
+        run: pnpm checkTs
       - name: Biome
         run: pnpm biome
       - name: Build the project
