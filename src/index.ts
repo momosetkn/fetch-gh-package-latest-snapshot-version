@@ -44,30 +44,48 @@ async function getLatestVersion({
 	packageName: string;
 }): Promise<string | undefined> {
 	const versionRegex = versionPattern && new RegExp(versionPattern);
-	return getVersions({
-		githubToken,
-		org,
-		packageType,
-		packageName,
-	})
-		.then((response) =>
-			response.json().then((data) => ({
-				ok: response.ok,
-				status: response.status,
-				data: data as { name: string }[],
-			})),
-		)
-		.then(({ ok, status, data }) => {
-			if (!ok) {
-				throw new Error(
-					`HTTP error! status: ${status} body: ${JSON.stringify(data)}`,
-				);
-			}
-			if (versionRegex) {
-				return data.map((x) => x.name).find((name) => versionRegex.test(name));
-			}
-			return data[0].name;
-		});
+	const perPage = 30;
+	function fetchPage(page: number): Promise<string | undefined> {
+		return getVersions({
+			githubToken,
+			org,
+			packageType,
+			packageName,
+			perPage,
+			page,
+		})
+			.then((response) =>
+				response.json().then((data) => ({
+					ok: response.ok,
+					status: response.status,
+					data: data as { name: string }[],
+				})),
+			)
+			.then(({ ok, status, data }) => {
+				if (!ok) {
+					throw new Error(
+						`HTTP error! status: ${status} body: ${JSON.stringify(data)}`,
+					);
+				}
+				let found: string | undefined = undefined;
+				if (versionRegex) {
+					found = data
+						.map((x) => x.name)
+						.find((name) => versionRegex.test(name));
+				} else {
+					found = data[0]?.name;
+				}
+
+				if (found) {
+					return found;
+				}
+				if (data.length < perPage) {
+					return undefined;
+				}
+				return fetchPage(page + 1);
+			});
+	}
+	return fetchPage(1);
 }
 
 async function getVersions({
@@ -75,11 +93,15 @@ async function getVersions({
 	org,
 	packageType,
 	packageName,
+	perPage,
+	page,
 }: {
 	githubToken: string | undefined;
 	org: string;
 	packageType: string;
 	packageName: string;
+	perPage: number;
+	page: number;
 }): Promise<NodeFetchResponse> {
 	// https://docs.github.com/en/rest/packages/packages?apiVersion=2022-11-28#list-package-versions-for-a-package-owned-by-an-organization
 	let authHeader = {};
@@ -88,7 +110,7 @@ async function getVersions({
 			Authorization: `Bearer ${githubToken}`,
 		};
 	}
-	const url = `https://api.github.com/orgs/${org}/packages/${packageType}/${packageName}/versions`;
+	const url = `https://api.github.com/orgs/${org}/packages/${packageType}/${packageName}/versions?per_page=${perPage}&page=${page}`;
 	console.log(`fetching ${url}`);
 	return fetch(url, {
 		headers: {
